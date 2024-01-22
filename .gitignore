@@ -2,6 +2,7 @@
 *drawio.bkp
 db.drawio
 steps.txt
+.env
 
 # dependencies
 **/node_modules
