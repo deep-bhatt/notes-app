@@ -7,18 +7,25 @@ router.post('/register-user', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const selectUser = await pool.query('SELECT count(id) FROM users WHERE username = $1', [username]);
-    if (selectUser.rows[0].count !== 0) {
+    if (!username || !password) {
       res.status(400).json({
-        error: 'username already exists'
+        error: 'username or password is missing'
       })
-    }
-    else {
-      const hashedPassword = await hashPassword(password);
-      const result = await pool.query('INSERT INTO users (username, hash) VALUES ($1, $2) RETURNING id', [username, hashedPassword]);
-      const userId = result.rows[0].id;
-      const token = generateJWT(userId);
-      res.status(201).json({ token });
+    } else {
+      const selectUser = await pool.query('SELECT count(id) FROM users WHERE username = $1', [username]);
+      console.log(selectUser.rows[0]);
+      if (parseInt(selectUser.rows[0].count) !== 0) {
+        res.status(400).json({
+          error: 'username already exists'
+        })
+      }
+      else {
+        const hashedPassword = await hashPassword(password);
+        const result = await pool.query('INSERT INTO users (username, hash) VALUES ($1, $2) RETURNING id', [username, hashedPassword]);
+        const userId = result.rows[0].id;
+        const token = generateJWT(userId);
+        res.status(201).json({ token });
+      }
     }
   } catch (error) {
     console.error(error);

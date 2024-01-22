@@ -6,7 +6,7 @@ const verifyJwt = require('../middleware/jwt');
 router.get('/notes', verifyJwt, async (req, res) => {
   try {
     const userId = req.user.userId;
-    const notes = await pool.query('SELECT * FROM notes WHERE userId = $1', [userId]);
+    const notes = await pool.query('SELECT * FROM notes WHERE userId = $1 ORDER BY updatedAt DESC', [userId]);
     res.json({data: notes.rows});
   } catch (error) {
     console.error(error);
@@ -79,5 +79,23 @@ router.delete('/notes/:id', verifyJwt, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+router.get('/version/notes/:id', verifyJwt, async (req, res) => {
+  try {
+
+    const userId = req.user.userId;
+    const { id: noteId } = req.params;
+    const note = await pool.query('SELECT id FROM notes WHERE id = $1 AND userId = $2', [noteId, userId]);
+    if (note.rowCount == 0) {
+      res.status(400).json({ error: 'invalid note id' });
+    } else {
+      const versions = await pool.query('SELECT * FROM notes_version WHERE note_id = $1 ORDER BY timestamp DESC', [noteId]);
+      res.status(200).json({data: versions.rows});
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
 
 module.exports = router;

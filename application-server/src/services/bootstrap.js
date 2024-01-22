@@ -34,7 +34,7 @@ const setupTables = async () => {
     oldVal TEXT,
     newVal TEXT,
     timestamp TIMESTAMP DEFAULT now(),
-    FOREIGN KEY (note_id) REFERENCES notes(id)
+    FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
   );`;
   const versionControlFunc = `CREATE OR REPLACE FUNCTION log_note_update()
     RETURNS TRIGGER AS $$
