@@ -7,7 +7,14 @@ const PORT = 8080;
 const { setupTables } = require('./services/bootstrap');
 const authRoutes = require('./routes/authRoutes');
 const notesRoutes = require('./routes/notesRoutes');
+const cors = require('cors');
+const corsOptions = {
+  // react FE app
+  origin: 'http://localhost:5173',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(authRoutes);
 app.use(notesRoutes);
