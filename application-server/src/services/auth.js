@@ -5,6 +5,17 @@ const generateJWT = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1d' });
 };
 
+function isValidPassword(password) {
+  if (password.length <= 6) {
+      return false;
+  }
+  const regex = /[!@#$%^&*(),.?":{}|<>_]/;
+  if (!regex.test(password)) {
+      return false;
+  }
+  return true;
+}
+
 const hashPassword = async (password) => {
   return await bcrypt.hash(password, 10);
 };
@@ -17,4 +28,5 @@ module.exports = {
   generateJWT,
   hashPassword,
   comparePassword,
+  isValidPassword
 };

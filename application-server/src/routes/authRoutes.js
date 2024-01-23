@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { generateJWT, hashPassword, comparePassword } = require('../services/auth');
+const {
+  generateJWT,
+  hashPassword,
+  comparePassword,
+  isValidPassword,
+} = require('../services/auth');
 const { checkUserExists, createUser, findUserByUsername } = require('../services/user');
 
 router.post('/register-user', async (req, res) => {
@@ -9,6 +14,11 @@ router.post('/register-user', async (req, res) => {
 
     if (!username || !password) {
       return res.status(400).json({ error: 'username or password is missing' });
+    }
+
+    // passwords should meet a certian checks
+    if (!isValidPassword(password)) {
+      return res.status(400).json({ error: 'password should have min 6 characters and one special character' });
     }
 
     const userExists = await checkUserExists(username);
