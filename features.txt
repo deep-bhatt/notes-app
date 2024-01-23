@@ -1,0 +1,42 @@
+This file contains backend decisions I made. I also try to make a case for why I think they're justified.
+
+On Backend Stack:
+1. NodeJS / Express
+  - NodeJS is pretty efficient at handling I/O bound tasks due to its event driven nature
+  - I used Express since it's minimalistic framework
+
+2. PostgreSQL
+  - It's an open-souce database engine, and also the one I was most comfortable with
+
+- (optional) pgadmin
+  - Helps while developement
+
+- (optional) PM2 - Process Manager
+  - Helps with vertically scaling NodeJS application by starting multiple Node
+  processes on your cores, also has a built-in load balancer
+
+Authentication:
+  1. Users first register using a password and a username (unique)
+  2. Passwords are hashed using bcrypt, which also ensures salting
+  3. Passwords must have at least 6 characters including one special character
+  4. JWT are used for authenticating users -- uses a symmetric key
+  5. A middleware which verifies JWT token, and attaches user id to request context.
+
+Database Bootstrap:
+  - On server run or restart, a bootstrap script is run to ensure tables
+  are created if they don't already exist
+  - This can have drawbacks
+
+Security:
+  - SQL queries are parameterized to prevent SQL Injections
+  - Every Note's CRUD endpoint has authentication and authorization checks
+  - Appropiate CORS is set to only allow React client to read API resources
+  - XSS are prevented in React by using string variables, since they are escaped automatically
+  - Using Helmet npm package, we follow HTTP headers best practices -- eg. CSP, anti clickjacking headers... etc
+  - App is resilient to CSRF attacks
+  - POST /login route is protected using an IP based rate limiter
+
+Performance:
+  - Database pooling is used - so we don't have to cold start a TCP connection
+  - Indexes are created on relevant table's columns
+  - Optionally, PM2 can be used to scale app vertically in a host
