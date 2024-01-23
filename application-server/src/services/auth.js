@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const generateJWT = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1d' });
+const generateJWT = (userId, username) => {
+  return jwt.sign({ userId, username }, process.env.JWT_SECRET, { expiresIn: '1d' });
 };
 
 function isValidPassword(password) {
