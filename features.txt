@@ -65,3 +65,4 @@ Further improvements that should be done:
   - Prevent users from using a common password from a dictionary
   - Use Bloom Filters to check if username is already taken or not - saves a round-trip to the database
   - Partition `notes` table horizontally if it has millions and millions of rows
+  - Use TS in backend
