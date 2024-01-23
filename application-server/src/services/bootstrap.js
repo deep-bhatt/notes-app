@@ -16,24 +16,38 @@ const setupTables = async () => {
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username TEXT UNIQUE NOT NULL,
     hash TEXT NOT NULL,
-    createdAt TIMESTAMP DEFAULT now()
+    createdAt TIMESTAMP WITH TIME ZONE DEFAULT now()
   );`
+
   const notesTable = `CREATE TABLE IF NOT EXISTS notes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     userId UUID NOT NULL,
     title TEXT NOT NULL,
     content TEXT,
-    createdAt TIMESTAMP DEFAULT now(),
-    updatedAt TIMESTAMP DEFAULT now(),
-    FOREIGN KEY (userId) REFERENCES users(id)
-  );`;
+    createdAt TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updatedAt TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    FOREIGN KEY (userId) REFERENCES users(id));`;
+
+  const notesTriggerFunc = `CREATE OR REPLACE FUNCTION update_updated_at_column()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.updatedAt = now(); -- Set updatedAt to the current timestamp
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;`;
+
+  const notesTrigger = `CREATE OR REPLACE TRIGGER set_notes_updated_at
+    BEFORE UPDATE ON notes
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();`;
+
   const versionTable = `CREATE TABLE IF NOT EXISTS notes_version (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     note_id UUID NOT NULL,
     colName TEXT NOT NULL,
     oldVal TEXT,
     newVal TEXT,
-    timestamp TIMESTAMP DEFAULT now(),
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT now(),
     FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
   );`;
   const versionControlFunc = `CREATE OR REPLACE FUNCTION log_note_update()
@@ -72,6 +86,8 @@ const setupTables = async () => {
     await client.query(notesUserIdIndex);
     await client.query(usersUsernameIndex);
     await client.query(notesVersionIndex);
+    await client.query(notesTriggerFunc);
+    await client.query(notesTrigger);
   } catch(err) {
     console.log('error in bootstrapping the database');
     console.log(err);
