@@ -30,7 +30,8 @@ Authentication:
   - Passwords are hashed using bcrypt, which also ensures salting
   - Passwords must have at least 6 characters including one special character
   - JWT are used for authenticating users -- uses a symmetric key
-  - A middleware which verifies JWT token, and attaches user id to request context.
+  - JWTs are stateless, and doesn't require a round trip to a DB -- helps with scaling the application
+  - Notes CRUD & Version Control routes uses a middleware which verifies JWT token, and attaches user id in request context.
 
 Version Control:
   - To version control notes, I used database triggers and function that runs when
@@ -60,6 +61,7 @@ Performance:
 Further improvements that should be done:
   - Add unit tests
   - Use migrations library for managing database states
+  - Use refresh tokens to refresh near expiry JWT - better User Experience
   - Prevent users from using a common password from a dictionary
   - Use Bloom Filters to check if username is already taken or not - saves a round-trip to the database
   - Partition `notes` table horizontally if it has millions and millions of rows
