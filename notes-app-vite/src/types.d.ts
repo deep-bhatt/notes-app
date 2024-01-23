@@ -2,7 +2,7 @@ export type Note = {
   id: string;
   title: string;
   content: string;
-  updatedat: string;
+  createdat: string;
 };
 
 export type Version = {
@@ -12,4 +12,11 @@ export type Version = {
   oldval: string;
   newval: string;
   timestamp: string;
+}
+
+export type JwtPayload = {
+  userId: string;
+  username: string;
+  exp: number;
+  iat: number;
 }

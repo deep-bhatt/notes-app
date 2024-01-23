@@ -1,4 +1,13 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { JwtPayload } from "../types";
+
+export function getUserName() {
+  const jwt = localStorage.getItem("jwt");
+  if (!jwt) return "";
+  const decodedToken: JwtPayload = jwtDecode(jwt);
+  return decodedToken.username;
+}
 
 export async function registerUser(username: string, password: string) {
   try {

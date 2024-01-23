@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   createNote,
   deleteNote,
@@ -7,6 +7,7 @@ import {
 } from "../services/notes";
 import { Note } from "../types";
 import { useNavigate } from "react-router-dom";
+import { getUserName } from "../services/auth";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -73,64 +74,69 @@ function Dashboard() {
   };
 
   return (
-    <div className="app-container">
-      <form
-        onSubmit={(event) =>
-          selectedNote ? handleUpdateNote(event) : handleAddNote(event)
-        }
-        className="note-form"
-      >
-        <input
-          value={title}
-          onChange={(event) => {
-            setTitle(event.target.value);
-          }}
-          placeholder="title"
-          required
-        ></input>
-        <textarea
-          value={content}
-          onChange={(event) => {
-            setContent(event.target.value);
-          }}
-          placeholder="content"
-          rows={10}
-          required
-        ></textarea>
-
-        {selectedNote ? (
-          <div className="edit-buttons">
-            <button type="submit">Save</button>
-            <button onClick={handleCancel}>Cancel</button>
-          </div>
-        ) : (
-          <button type="submit">Add Note</button>
-        )}
-      </form>
-      <div className="notes-grid">
-        {notes.map((note) => (
-          <div
-            className="note-item"
-            onClick={() => handleNoteClick(note)}
-            key={note.id}
-          >
-            <div className="notes-header">
-              <button onClick={(event) => handleNoteVersion(event, note.id)}>
-                ⌛
-              </button>
-              <button onClick={(event) => handleDeleteNote(event, note.id)}>
-                ❌
-              </button>
-            </div>
-            <h2>{note.title}</h2>
-            <p className="multi-line-text">{note.content}</p>
-            <div className="notes-footer">
-              <p>Updated at {note.updatedat}</p>
-            </div>
-          </div>
-        ))}
+    <Fragment>
+      <div className="container app-container">
+        <h3>{getUserName()}</h3>
       </div>
-    </div>
+      <div className="container app-container">
+        <form
+          onSubmit={(event) =>
+            selectedNote ? handleUpdateNote(event) : handleAddNote(event)
+          }
+          className="note-form"
+        >
+          <input
+            value={title}
+            onChange={(event) => {
+              setTitle(event.target.value);
+            }}
+            placeholder="title"
+            required
+          ></input>
+          <textarea
+            value={content}
+            onChange={(event) => {
+              setContent(event.target.value);
+            }}
+            placeholder="content"
+            rows={10}
+            required
+          ></textarea>
+
+          {selectedNote ? (
+            <div className="edit-buttons">
+              <button type="submit">Save</button>
+              <button onClick={handleCancel}>Cancel</button>
+            </div>
+          ) : (
+            <button type="submit">Add Note</button>
+          )}
+        </form>
+        <div className="notes-grid">
+          {notes.map((note) => (
+            <div
+              className="note-item"
+              onClick={() => handleNoteClick(note)}
+              key={note.id}
+            >
+              <div className="notes-header">
+                <button onClick={(event) => handleNoteVersion(event, note.id)}>
+                  ⌛
+                </button>
+                <button onClick={(event) => handleDeleteNote(event, note.id)}>
+                  ❌
+                </button>
+              </div>
+              <h2>{note.title}</h2>
+              <p className="multi-line-text">{note.content}</p>
+              <div className="notes-footer">
+                <p>Created at {note.createdat}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Fragment>
   );
 }
 
