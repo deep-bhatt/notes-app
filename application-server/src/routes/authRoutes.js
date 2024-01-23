@@ -1,4 +1,5 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const {
   generateJWT,
@@ -7,6 +8,16 @@ const {
   isValidPassword,
 } = require('../services/auth');
 const { checkUserExists, createUser, findUserByUsername } = require('../services/user');
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 10 minutes
+  max: 10, // limit each IP to 10 requests per windowMs
+  handler: (req, res) => {
+    res.status(429).json({
+      error: 'Too many login attempts, please try again after 10 minutes'
+    })
+  },
+});
 
 router.post('/register-user', async (req, res) => {
   try {
@@ -37,7 +48,7 @@ router.post('/register-user', async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   try {
     const { username, password } = req.body;
 
