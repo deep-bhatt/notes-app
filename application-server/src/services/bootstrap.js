@@ -52,12 +52,15 @@ const setupTables = async () => {
         RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;`;
-
   const versionControlTrigger = `CREATE OR REPLACE TRIGGER notes_version_trigger
     AFTER UPDATE OF title, content
     ON notes
     FOR EACH ROW
     EXECUTE FUNCTION log_note_update();`;
+
+  const notesUserIdIndex = `CREATE INDEX IF NOT EXISTS idx_notes_userid ON notes(userId);`;
+  const usersUsernameIndex = `CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)`;
+  const notesVersionIndex = `CREATE INDEX IF NOT EXISTS idx_notes_version_noteid ON notes_version(note_id)`;
 
   try {
     await client.query(uuidExt);
@@ -66,7 +69,9 @@ const setupTables = async () => {
     await client.query(versionTable);
     await client.query(versionControlFunc);
     await client.query(versionControlTrigger);
-
+    await client.query(notesUserIdIndex);
+    await client.query(usersUsernameIndex);
+    await client.query(notesVersionIndex);
   } catch(err) {
     console.log('error in bootstrapping the database');
     console.log(err);
