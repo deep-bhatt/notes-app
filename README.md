@@ -17,7 +17,7 @@
 - npm install
 - npm run start
 - the backend server should listen on `http://localhost:8080`by default
-- port can be configured in `.env` file
+- port can be configured in `.env` file (Note: You'll have to reflect changes in ReactJS client's `.env` file as well)
 
 ## Steps to start frontend server
 
