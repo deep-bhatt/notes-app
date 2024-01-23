@@ -1,32 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../services/db');
 const { generateJWT, hashPassword, comparePassword } = require('../services/auth');
+const { checkUserExists, createUser, findUserByUsername } = require('../services/user');
 
 router.post('/register-user', async (req, res) => {
   try {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      res.status(400).json({
-        error: 'username or password is missing'
-      })
-    } else {
-      const selectUser = await pool.query('SELECT count(id) FROM users WHERE username = $1', [username]);
-      console.log(selectUser.rows[0]);
-      if (parseInt(selectUser.rows[0].count) !== 0) {
-        res.status(400).json({
-          error: 'username already exists'
-        })
-      }
-      else {
-        const hashedPassword = await hashPassword(password);
-        const result = await pool.query('INSERT INTO users (username, hash) VALUES ($1, $2) RETURNING id', [username, hashedPassword]);
-        const userId = result.rows[0].id;
-        const token = generateJWT(userId);
-        res.status(201).json({ token });
-      }
+      return res.status(400).json({ error: 'username or password is missing' });
     }
+
+    const userExists = await checkUserExists(username);
+    if (userExists) {
+      return res.status(400).json({ error: 'username already exists' });
+    }
+
+    const hashedPassword = await hashPassword(password);
+    const userId = await createUser(username, hashedPassword);
+    const token = generateJWT(userId);
+
+    res.status(201).json({ token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -37,12 +31,10 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-    if (result.rows.length === 0) {
+    const user = await findUserByUsername(username);
+    if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-
-    const user = result.rows[0];
 
     const isValid = await comparePassword(password, user.hash);
     if (!isValid) {
