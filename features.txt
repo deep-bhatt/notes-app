@@ -15,12 +15,28 @@ On Backend Stack:
   - Helps with vertically scaling NodeJS application by starting multiple Node
   processes on your cores, also has a built-in load balancer
 
+RESTful APIs:
+  - POST /register-user
+  - POST /login
+  - GET /notes
+  - GET /notes/:id
+  - POST /notes
+  - PUT /notes/:id
+  - DELETE /notes/:id
+  - GET /version/notes/:id
+
 Authentication:
-  1. Users first register using a password and a username (unique)
-  2. Passwords are hashed using bcrypt, which also ensures salting
-  3. Passwords must have at least 6 characters including one special character
-  4. JWT are used for authenticating users -- uses a symmetric key
-  5. A middleware which verifies JWT token, and attaches user id to request context.
+  - Users first register using a password and a username (unique)
+  - Passwords are hashed using bcrypt, which also ensures salting
+  - Passwords must have at least 6 characters including one special character
+  - JWT are used for authenticating users -- uses a symmetric key
+  - A middleware which verifies JWT token, and attaches user id to request context.
+
+Version Control:
+  - To version control notes, I used database triggers and function that runs when
+  the trigger is invoked.
+  - The trigger runs a function whenever there's an UPDATE on note's title or content
+  - The function then logs the old and new value in version control database table
 
 Database Bootstrap:
   - On server run or restart, a bootstrap script is run to ensure tables
