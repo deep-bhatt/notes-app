@@ -18,7 +18,10 @@ export async function registerUser(username: string, password: string) {
     return { data: response.data, error: null };
   } catch (error: any) {
     // bad request from client
-    if (error.response && error.response.status === 400) {
+    if (
+      error.response &&
+      (error.response.status === 400 || error.response.status === 429)
+    ) {
       return { data: null, error: error.response.data };
     } else {
       console.error("An unexpected error occurred:", error);
@@ -36,7 +39,10 @@ export async function loginUser(username: string, password: string) {
     return { data: response.data, error: null };
   } catch (error: any) {
     // bad request from client
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 429)
+    ) {
       return { data: null, error: error.response.data };
     } else {
       console.error("An unexpected error occurred:", error);
