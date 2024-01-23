@@ -48,7 +48,7 @@ Security:
   - Every Note's CRUD endpoint has authentication and authorization checks
   - Appropiate CORS is set to only allow React client to read API resources
   - XSS are prevented in React by using string variables, since they are escaped automatically
-  - Using Helmet npm package, we follow HTTP headers best practices -- eg. CSP, anti clickjacking headers... etc
+  - Using Helmet npm package, we follow HTTP headers best practices -- eg. CSP, Anti-Clickjacking headers... etc
   - App is resilient to CSRF attacks
   - POST /login route is protected using an IP based rate limiter
 
@@ -56,3 +56,10 @@ Performance:
   - Database pooling is used - so we don't have to cold start a TCP connection
   - Indexes are created on relevant table's columns
   - Optionally, PM2 can be used to scale app vertically in a host
+
+Further improvements that should be done:
+  - Add unit tests
+  - Use migrations library for managing database states
+  - Prevent users from using a common password from a dictionary
+  - Use Bloom Filters to check if username is already taken or not - saves a round-trip to the database
+  - Partition `notes` table horizontally if it has millions and millions of rows
