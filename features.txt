@@ -26,7 +26,7 @@ RESTful APIs:
   - GET /version/notes/:id
 
 Authentication:
-  - Users first register using a password and a username (unique)
+  - Users first registers using a password and a username (unique)
   - Passwords are hashed using bcrypt, which also ensures salting
   - Passwords must have at least 6 characters including one special character
   - JWT are used for authenticating users -- uses a symmetric key
