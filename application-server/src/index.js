@@ -2,6 +2,7 @@
 require('dotenv').config()
 
 const express = require('express');
+const helmet = require('helmet');
 const app = express();
 const PORT = 8080;
 const { setupTables } = require('./services/bootstrap');
@@ -14,6 +15,7 @@ const corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
+app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(authRoutes);
