@@ -1,11 +1,11 @@
 This file contains backend decisions I made. I also try to make a case for why I think they're justified.
 
 On Backend Stack:
-1. NodeJS / Express
+- NodeJS / Express
   - NodeJS is pretty efficient at handling I/O bound tasks due to its event driven nature
   - I used Express since it's minimalistic framework
 
-2. PostgreSQL
+- PostgreSQL
   - It's an open-souce database engine, and also the one I was most comfortable with
 
 - (optional) pgadmin
