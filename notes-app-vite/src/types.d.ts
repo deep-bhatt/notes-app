@@ -3,6 +3,7 @@ export type Note = {
   title: string;
   content: string;
   createdat: string;
+  updatedat: string;
 };
 
 export type Version = {

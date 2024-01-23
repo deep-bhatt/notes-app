@@ -35,10 +35,11 @@ function Dashboard() {
     console.log("handleUpdateNote: ", selectedNote);
     const updatedNote = await updateNote(selectedNote.id, title, content);
 
-    const updatedNodeList: Note[] = notes.map((note) => {
-      return note.id === selectedNote.id ? updatedNote : note;
+    const updatedNodeList: Note[] = notes.filter((note) => {
+      return note.id === updatedNote.id ? false : true;
     });
-    setNotes(updatedNodeList);
+
+    setNotes([updatedNote, ...updatedNodeList]);
     setTitle("");
     setContent("");
     setSelectedNote(null);
@@ -130,7 +131,7 @@ function Dashboard() {
               <h2>{note.title}</h2>
               <p className="multi-line-text">{note.content}</p>
               <div className="notes-footer">
-                <p>Created at {note.createdat}</p>
+                <p>Updated at {note.updatedat}</p>
               </div>
             </div>
           ))}
