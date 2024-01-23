@@ -1,11 +1,12 @@
 import axios from "axios";
 import { Note, Version } from "../types";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export async function getAllNotes(): Promise<Note[]> {
   try {
     const token = localStorage.getItem("jwt");
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    const response = await axios.get("http://localhost:8080/notes", {
+    const response = await axios.get(`${apiUrl}/notes`, {
       headers,
     });
     return response.data.data;
@@ -21,7 +22,7 @@ export async function createNote(title: string, content: string) {
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
     const response = await axios.post(
-      "http://localhost:8080/notes",
+      `${apiUrl}/notes`,
       { title, content },
       { headers }
     );
@@ -42,7 +43,7 @@ export async function updateNote(
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
     const response = await axios.put(
-      `http://localhost:8080/notes/${noteId}`,
+      `${apiUrl}/notes/${noteId}`,
       { title, content },
       { headers }
     );
@@ -58,10 +59,9 @@ export async function deleteNote(noteId: string) {
     const token = localStorage.getItem("jwt");
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-    const response = await axios.delete(
-      `http://localhost:8080/notes/${noteId}`,
-      { headers }
-    );
+    const response = await axios.delete(`${apiUrl}/notes/${noteId}`, {
+      headers,
+    });
     return response.data.data;
   } catch (error) {
     console.error("Error creating note:", error);
@@ -74,10 +74,9 @@ export async function getNoteVersion(noteId: string): Promise<Version[]> {
     const token = localStorage.getItem("jwt");
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-    const response = await axios.get(
-      `http://localhost:8080/version/notes/${noteId}`,
-      { headers }
-    );
+    const response = await axios.get(`${apiUrl}/version/notes/${noteId}`, {
+      headers,
+    });
     return response.data.data;
   } catch (error) {
     console.error("Error fetching notes version:", error);

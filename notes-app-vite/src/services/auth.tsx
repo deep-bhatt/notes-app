@@ -1,6 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../types";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export function getUserName() {
   const jwt = localStorage.getItem("jwt");
@@ -11,7 +12,7 @@ export function getUserName() {
 
 export async function registerUser(username: string, password: string) {
   try {
-    const response = await axios.post("http://localhost:8080/register-user", {
+    const response = await axios.post(`${apiUrl}/register-user`, {
       username,
       password,
     });
@@ -32,7 +33,7 @@ export async function registerUser(username: string, password: string) {
 
 export async function loginUser(username: string, password: string) {
   try {
-    const response = await axios.post("http://localhost:8080/login", {
+    const response = await axios.post(`${apiUrl}/login`, {
       username,
       password,
     });

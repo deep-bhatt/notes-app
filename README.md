@@ -22,6 +22,7 @@
 ## Steps to start frontend server
 
 - cd to `notes-app-vite`
+- copy `.env.copy` file to create a new `.env` file
 - npm install
 - npm run build
 - npm run preview
