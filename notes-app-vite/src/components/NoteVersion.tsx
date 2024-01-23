@@ -17,9 +17,9 @@ function NoteVersion() {
   }, [noteId]);
 
   return (
-    <div>
+    <div className="container">
       <h3>Notes changes</h3>
-      <table>
+      <table className="table table-bordered">
         <thead>
           <tr>
             <th>Column Name</th>
