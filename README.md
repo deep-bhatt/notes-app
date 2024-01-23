@@ -30,3 +30,22 @@
 ### Backend architecture and decisions
 
 - Please read `features.txt`, it contains in-depth decisions about backend, and I make a case for why I made those decisions.
+
+### Scaling backend application using PM2
+
+We can use PM2 for starting a Node.js application, scaling it horizontally, and enabling load balancing.
+
+```bash
+# install pm2 globally
+npm install pm2 -g
+
+# spins up 4 servers processes and load balances automatically
+# you can spin max processes equal to number of CPU cores. use option '-i max'
+pm2 start src/index.js -i 4 --name application-server
+
+# stop or delete all processes
+pm2 stop|delete all
+
+# kill all pm2 processes
+pm2 kill
+```
