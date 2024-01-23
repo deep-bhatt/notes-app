@@ -49,3 +49,25 @@ pm2 stop|delete all
 # kill all pm2 processes
 pm2 kill
 ```
+
+## App Screenshots
+
+### Postgres database schema
+
+![Database Schema](screenshots/database-schema.png)
+
+### Login Form
+
+![Dashboard](screenshots/login.png)
+
+### Register Form
+
+![Dashboard](screenshots/register.png)
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+### Notes Version Control
+
+![Dashboard](screenshots/version.png)
